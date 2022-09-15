@@ -3,12 +3,16 @@
     enter-active-class="animated fadeIn"
     leave-active-class="animated fadeOut"
   >
-    <div class="fixed-bottom fixed-left z-max" key="galleryModal">
+    <div class="fixed-bottom fixed-left z-max" key="galleryModal" v-if="images.length > 0">
       <div class="dimmed-background full-height">
         <div class="flex column no-wrap full-height">
-          <div class="q-pb-md relative-position" style="flex-grow: 1; user-select: none" v-touch-swipe.mouse="getScale === 1 ? handleSwipe : undefined">
+          <div
+              class="q-pb-md relative-position"
+              style="flex-grow: 1; user-select: none"
+              v-touch-swipe.mouse="getScale === 1 ? handleSwipe : undefined"
+          >
             <div class="text-center full-height flex flex-center">
-              <div class="relative-position" :key="activeImage.file" >
+              <div class="relative-position c-active-image" :key="activeImage.file" >
 
                 <component v-bind="getImgComponent(activeImage)" :is="imgComponent"
                   :key="activeImagePosition"
@@ -54,16 +58,16 @@
   </transition-group>
 </template>
 
-<script lang="ts">
+<script>
 
 import {defineComponent} from 'vue'
-
-export interface Image {
-  file: string,
-  description?: string
-  default_alt_text?: string
-  thumb?: object
-}
+//
+// export interface Image {
+//   file: string,
+//   description?: string
+//   default_alt_text?: string
+//   thumb?: object
+// }
 
 
 import SrcsetImg from './SrcsetImg';
@@ -92,7 +96,8 @@ export default defineComponent({
   props: {
     images: {
       required: true,
-      type: undefined as () => Array<Image>
+      type: undefined,
+      default: []
     },
     position: {
       default: 0
