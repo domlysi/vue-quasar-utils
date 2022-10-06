@@ -1,4 +1,5 @@
-import ApiInput from '../ApiInput'
+import ApiInput from './ApiInput'
+import ApiSelect from './ApiSelect';
 
 
 export const fieldComponentMapping = {
@@ -15,7 +16,7 @@ export const fieldComponentMapping = {
     'date': undefined,
     'datetime': undefined,
     'time': undefined,
-    'choice': undefined,
+    'choice': ApiSelect,
     'multiple choice': undefined,
     'file upload': undefined,
     'image upload': undefined,

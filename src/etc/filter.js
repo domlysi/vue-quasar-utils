@@ -1,13 +1,21 @@
 import {LocalStorage} from 'quasar';
 import {date as quasarDate} from 'quasar';
 
-function parseDate(date, opts) {
+function parseDate(date, opts, locale = undefined) {
+    if (!date) { return date }
     if (!quasarDate.isValid(date)) {
         console.error(`Dateformat invalid: ${date}`)
         return date
     }
     let dateObj = new Date(date)
-    return dateObj.toLocaleDateString(LocalStorage.getItem('language'), opts)
+    let lang = locale || LocalStorage.getItem('language') || (navigator ? navigator.language : undefined)
+
+    try {
+        return dateObj.toLocaleDateString(lang, opts)
+    } catch (err) {
+        console.error(date, err)
+        return undefined
+    }
 }
 
 export default {
@@ -24,6 +32,7 @@ export default {
     },
 
     i18nDate: function (date, opts = undefined) {
+        if (!date) { return date }
         let defaultOpts = {
             weekday: 'long',
             year: 'numeric',
@@ -34,10 +43,12 @@ export default {
     },
 
     i18nTime: function (date, opts = undefined) {
+        if (!date) { return date }
         return parseDate(date, opts)
     },
 
     i18nDateTime: function (date) {
+        if (!date) { return date }
         let options = {
             hour: '2-digit',
             minute: '2-digit',

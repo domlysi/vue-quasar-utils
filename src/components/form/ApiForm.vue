@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 import {fieldComponentMapping, fieldTypeMapping} from './fieldMapping';
 
 export default {
@@ -60,7 +60,6 @@ export default {
     const fields = ref()
     const formData = ref({})
 
-
     const onSubmit = function (e) {
       context.emit('update:modelValue', formData.value)
       context.emit('submit', formData.value)
@@ -68,6 +67,7 @@ export default {
 
 
     const parseFields = function () {
+      if (!props.optionFields) { return }
       let ret = []
       for (const [key, value] of Object.entries(props.optionFields)) {
         formData.value[key] = value.default
@@ -84,7 +84,12 @@ export default {
       }
       return ret
     }
-    fields.value = parseFields()
+
+    watch(
+        () => props.optionFields,
+        (count, prevCount) => {
+      fields.value = parseFields()
+    })
 
     const getFieldComponent = (fieldType) => {
       return fieldComponentMapping[fieldType]
