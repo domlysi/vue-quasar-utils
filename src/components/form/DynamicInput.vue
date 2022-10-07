@@ -120,8 +120,6 @@ const TYPE_MAPPING = {
   },
 }
 
-const REQUIRED_LABEL_ADDITION: String = '*'
-
 export default defineComponent({
   name: 'DynamicInput',
   props: {
@@ -153,16 +151,11 @@ export default defineComponent({
         throw (`Field "${props.field.type}" has no component in mapping.`)
       }
 
-      let label = props.field.label
-      if (props.field.required) {
-        label = label + ' ' + REQUIRED_LABEL_ADDITION
-      }
-
       let r = {
         component: TYPE_MAPPING[props.field.type]['component'],
         attrs: {
           ...TYPE_MAPPING[props.field.type]['attrs'],
-          label,
+          label: props.field.label,
           hint: props.field.help_text,
           readonly: props.field.read_only,
           maxlength: props.field.max_length
