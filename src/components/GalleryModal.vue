@@ -3,7 +3,7 @@
     enter-active-class="animated fadeIn"
     leave-active-class="animated fadeOut"
   >
-    <div class="fixed-bottom fixed-left z-max" key="galleryModal" v-if="images.length > 0">
+    <div class="fixed-bottom fixed-left z-max overflow-hidden" key="galleryModal" v-if="images.length > 0">
       <div class="dimmed-background full-height">
         <div class="flex column no-wrap full-height">
           <div
@@ -52,6 +52,15 @@
 
         <div class="fixed-top-right z-max">
           <q-btn flat round text-color="white" @click="closeModal" icon="close" />
+        </div>
+
+        <div class="fixed-right q-mr-xs" @click="" style="top: calc(50% - 100px)">
+          <q-btn @click="activeImagePosition = getNextPosition(activeImagePosition)" class="text-white bg-black" round flat >
+            <q-icon name="navigate_next" />
+          </q-btn>
+        </div>
+        <div @click="activeImagePosition = getPrevPosition(activeImagePosition)" class="fixed-left q-ml-xs" style="top: calc(50% - 100px)">
+          <q-btn class="text-white bg-black" round flat ><q-icon name="navigate_before" /></q-btn>
         </div>
       </div>
     </div>
@@ -144,7 +153,8 @@ export default defineComponent({
       if (this.withSrcSetImage) {
         return {
           alt: image.default_alt_text,
-          image: image
+          image: image,
+          src: image.file
         }
       }
       return {
@@ -155,7 +165,6 @@ export default defineComponent({
     touchEnd: function (e) {
       lastDistance = undefined
       this.scaling = false
-      console.log('end', e)
     },
 
     touchMove: function (e) {
@@ -176,11 +185,11 @@ export default defineComponent({
           }
 
           let deltaDistance = Math.abs(lastDistance - distance)
-          console.log(deltaDistance)
+          console.debug(deltaDistance)
           if (deltaDistance < 2) { return }
 
           if (deltaDistance > 100) {
-            console.log('distance', distance, 'lastDistance', lastDistance)
+            console.debug('distance', distance, 'lastDistance', lastDistance)
           }
 
           // deltaDistance between 0-10 usually
@@ -194,10 +203,10 @@ export default defineComponent({
           let normalizeScale = deltaDistance * 10 / (100/0.25)
 
           if (distance > lastDistance) {
-            console.log('zoom in', deltaDistance)
+            console.debug('zoom in', deltaDistance)
             this.scale = this.scale + normalizeScale
           } else {
-            console.log('zoom out', deltaDistance)
+            console.debug('zoom out', deltaDistance)
             this.scale = this.scale - normalizeScale
           }
           lastDistance = distance
