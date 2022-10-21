@@ -5,7 +5,16 @@
     :src="src"
   >
     <template #default>
-      <slot name="default"></slot>
+      <slot name="default">
+        <template v-if="!srcset && !src">
+          <div class="bg-grey-3 full-width full-height">
+            <div class="absolute-center text-grey-5 text-center">
+              <q-icon name="image" size="md" />
+              <div>Kein Bild</div>
+            </div>
+          </div>
+        </template>
+      </slot>
     </template>
   </q-img>
 </template>
