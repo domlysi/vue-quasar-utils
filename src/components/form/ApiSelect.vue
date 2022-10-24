@@ -4,7 +4,7 @@
       :error-message="errors ? errors.join(' ') : undefined"
       v-bind="$attrs"
   >
-    <template v-for="(index, name) in $slots" v-slot:[name]>
+    <template v-for="(name, index) in $slots" v-slot:[name]>
       <slot :name="name" />
     </template>
   </q-select>
