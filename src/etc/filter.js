@@ -31,32 +31,34 @@ export default {
         }).format(value)
     },
 
-    i18nDate: function (date, opts = undefined) {
+    i18nDate: function (date, options = undefined) {
         if (!date) { return date }
         let defaultOpts = {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
+            ...options
         };
-        return parseDate(date, opts || defaultOpts)
+        return parseDate(date, defaultOpts)
     },
 
-    i18nTime: function (date, opts = undefined) {
+    i18nTime: function (date, options = undefined) {
         if (!date) { return date }
-        return parseDate(date, opts)
+        return parseDate(date, options)
     },
 
-    i18nDateTime: function (date) {
+    i18nDateTime: function (date, options=undefined) {
         if (!date) { return date }
-        let options = {
+        let _options = {
             hour: '2-digit',
             minute: '2-digit',
             weekday: 'long',
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
+            ...options
         };
-        return parseDate(date, options)
+        return parseDate(date, _options)
     }
 }
