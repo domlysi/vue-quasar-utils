@@ -29,7 +29,7 @@
 
   <template v-else>
     <div :class="withContainer ? 'container' : ''">
-      <div class="row q-col-gutter-lg">
+      <div class="row q-col-gutter-md">
 
         <template v-if="!loading">
           <div

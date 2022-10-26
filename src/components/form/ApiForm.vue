@@ -20,6 +20,8 @@
       </component>
     </template>
 
+    <slot name="extras"></slot>
+
     <div class="col-12">
       <slot name="submit">
         <q-btn type="submit">Submit</q-btn>
@@ -88,8 +90,8 @@ export default {
     watch(
         () => props.optionFields,
         (count, prevCount) => {
-      fields.value = parseFields()
-    })
+          fields.value = parseFields()
+        })
 
     const getFieldComponent = (fieldType) => {
       return fieldComponentMapping[fieldType]
