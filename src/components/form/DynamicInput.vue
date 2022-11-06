@@ -136,10 +136,6 @@ export default defineComponent({
     },
   },
   setup(props, ctx) {
-    const label = computed(() => {
-
-    })
-
     const component = computed(() => {
       if (props.fieldComponent) {
         return props.fieldComponent
@@ -179,10 +175,6 @@ export default defineComponent({
 
       if (r.component === QCheckbox) {
         r.attrs['falseValue'] = null
-
-        if (r.attrs.modelValue === undefined || r.attrs.modelValue === null) {
-          r.attrs.modelValue = false
-        }
       }
 
       r.attrs = {
