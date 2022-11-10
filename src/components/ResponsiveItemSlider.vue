@@ -4,7 +4,7 @@
     <template v-if="!loading">
       <div class="full-width flex no-wrap q-gutter-x-lg q-py-lg q-pr-lg" style="overflow-x: scroll">
         <div v-for="(item, i) in items" :key="i" :class="itemClass + (!isMarginLeft && i === 0 ? ' q-ml-none' : '')">
-          <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: itemHeight}">
+          <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: 'auto'}">
             <slot name="default" :item="item" :index="i"></slot>
           </div>
           <div></div>
@@ -74,7 +74,6 @@ export default  {
       default: '80vw',
     },
     itemMaxWidth: { default: '350px' },
-    itemHeight: { default: '500px' },
     itemMinWidth: { default: '250px' },
     itemClass: { default: undefined },
     colClasses: { default: 'col-6 col-md-4' },

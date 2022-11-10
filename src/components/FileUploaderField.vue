@@ -20,7 +20,6 @@
       <div class="col-12">
         <div class="">
 
-
           <template v-if="!gallery">
             <template v-for="(file, index) in fileList" :key="file.name">
               <div
@@ -51,6 +50,11 @@
                 </template>
                 <div class="text-center">
                   <div>{{fileSize(file)}}</div>
+                  <template v-if="ordering">
+                    <q-btn flat round @click="setPosImageUp(index)"><q-icon size="xs" name="fas fa-angle-up"/></q-btn>
+                    <q-btn flat round @click="setPosImageDown(index)"><q-icon size="xs" name="fas fa-angle-down"/></q-btn>
+                  </template>
+
                   <q-btn @click="removeFile(index)" round flat size="sm">
                     <q-icon name="fas fa-trash"></q-icon>
                   </q-btn>
@@ -88,6 +92,13 @@ export default {
     },
     modelValue: {
       required: true,
+    },
+    lastOrderNum: {
+      default: 0
+    },
+    ordering: {
+      default: false,
+      type: Boolean
     }
   },
   emits: ['update:modelValue'],
@@ -142,6 +153,17 @@ export default {
       emitVal()
     }
 
+    const setPosImageUp = function (pos) {
+      if (pos >= fileList.value.length) return
+      const element = fileList.value.splice(pos, 1)[0];
+      fileList.value.splice(pos + 1, 0, element);
+    }
+    const setPosImageDown = function (pos) {
+      if (pos <= 0) return
+      const element = fileList.value.splice(pos, 1)[0];
+      fileList.value.splice(pos - 1, 0, element);
+    }
+
     return {
       click,
       fileInput,
@@ -151,6 +173,8 @@ export default {
       drop,
       removeFile,
       fileSize,
+      setPosImageUp,
+      setPosImageDown,
     }
   }
 }
