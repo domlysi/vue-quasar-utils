@@ -4,7 +4,7 @@
       <div>
         <q-icon name="fas fa-file-arrow-up" size="lg" />
         <input
-            v-bind="inputProps"
+            v-bind="$attrs"
             :multiple="multiple"
             @change="changeFile"
             ref="fileInput"
@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import {ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 
 function returnFileSize(number) {
   if (number < 1024) {
@@ -86,10 +86,7 @@ export default {
   props: {
     multiple: {default: true, type: Boolean},
     gallery: { default: false, type: Boolean },
-    label: { default: 'Drag and drop files or click here'},
-    inputProps: {
-      type: Object
-    },
+    label: {default: 'Drag and drop files or click here'},
     modelValue: {
       required: true,
     },
@@ -99,18 +96,23 @@ export default {
     ordering: {
       default: false,
       type: Boolean
+    },
+    errors: {
+      type: Array
     }
   },
   emits: ['update:modelValue'],
   setup(props, {emit}) {
     const fileInput = ref<HTMLInputElement>()
     const fileList = ref<Array<File>>([])
+    const tmpError = ref()
 
     function preventDefaults(e) {
       e.preventDefault()
     }
 
     const emitVal = function () {
+      tmpError.value = undefined
       emit('update:modelValue', fileList.value)
     }
 
@@ -153,15 +155,22 @@ export default {
       emitVal()
     }
 
+    watchEffect(() => {
+      tmpError.value = props.errors
+    })
+
     const setPosImageUp = function (pos) {
       if (pos >= fileList.value.length) return
       const element = fileList.value.splice(pos, 1)[0];
       fileList.value.splice(pos + 1, 0, element);
+      emitVal()
     }
+
     const setPosImageDown = function (pos) {
       if (pos <= 0) return
       const element = fileList.value.splice(pos, 1)[0];
       fileList.value.splice(pos - 1, 0, element);
+      emitVal()
     }
 
     return {
@@ -175,6 +184,7 @@ export default {
       fileSize,
       setPosImageUp,
       setPosImageDown,
+      tmpError
     }
   }
 }
