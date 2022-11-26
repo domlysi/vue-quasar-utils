@@ -154,7 +154,8 @@ export default defineComponent({
           label: props.field.label,
           hint: props.field.help_text,
           readonly: props.field.read_only,
-          maxlength: props.field.max_length
+          maxlength: props.field.max_length,
+          ...ctx.attrs
         }
       }
 
