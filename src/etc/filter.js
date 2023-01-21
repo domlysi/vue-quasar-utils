@@ -60,5 +60,30 @@ export default {
             ...options
         };
         return parseDate(date, _options)
+    },
+    
+    dateTimeFormat: function (date, options=undefined, locale=undefined) {
+        if (!date) { return date }
+        if (!quasarDate.isValid(date)) {
+            console.error(`Dateformat invalid: ${date}`)
+            return date
+        }
+        let dateObj = new Date(date)
+        let lang = locale || LocalStorage.getItem('language') || (navigator ? navigator.language : undefined)
+    
+        return new Intl.DateTimeFormat(lang, options).format(dateObj)
+    },
+
+    pluralize: function(count, word, wordPlural=undefined) {
+        if (typeof count === 'object') {
+            count = count.value
+        }
+        count = Number.parseInt(count)
+        if (count === 1) { return word }
+        let _plural = wordPlural 
+        if (!wordPlural) {
+            _plural = `${word}s`
+        }
+        return _plural
     }
 }
