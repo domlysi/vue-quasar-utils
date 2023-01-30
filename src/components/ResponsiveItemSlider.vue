@@ -42,8 +42,8 @@
 
         <template v-if="loading">
           <div
-            v-for="i in skeletonAmount" :key="i"
-            class="col-6 col-md-4"
+              v-for="i in skeletonAmount" :key="i"
+              :class="`${colClasses} ${itemClass}`"
           >
             <slot name="skeleton">
               <q-skeleton
