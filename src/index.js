@@ -6,7 +6,8 @@ import DynamicInput from './components/form/DynamicInput.vue'
 import Filter from './etc/filter'
 import CookieConsent from './components/cookieConsent/CookieConsent';
 import FileUploaderField from './components/FileUploaderField';
-
+import SecureEmail from './components/SecureEmail';
+import FadeOutText from './components/FadeOutText';
 
 
 export default {
@@ -18,6 +19,8 @@ export default {
         Vue.component(CookieConsent.name, CookieConsent)
         Vue.component(FileUploaderField.name, FileUploaderField)
         Vue.component(DynamicInput.name, DynamicInput)
+        Vue.component(SecureEmail.name, SecureEmail)
+        Vue.component('FadeOutText', FadeOutText)
 
         Vue.config.globalProperties.$filters = Filter
     },
