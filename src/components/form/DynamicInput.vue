@@ -174,10 +174,6 @@ export default defineComponent({
         }
       }
 
-      if (r.component === QCheckbox) {
-        r.attrs['falseValue'] = null
-      }
-
       r.attrs = {
         ...r.attrs,
         ...ctx.attrs
