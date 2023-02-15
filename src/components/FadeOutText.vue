@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import {defineProps, onMounted, ref} from 'vue';
+import {onMounted, ref} from 'vue';
 
 const wrapperRef = ref()
 const isHidden = ref(false)
