@@ -1,5 +1,5 @@
-import ApiInput from './ApiInput'
-import ApiSelect from './ApiSelect';
+import ApiInput from './ApiInput.vue'
+import ApiSelect from './ApiSelect.vue';
 
 
 export const fieldComponentMapping = {

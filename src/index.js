@@ -1,13 +1,13 @@
-import GalleryModal from './components/GalleryModal';
-import SrcsetImage from './components/SrcsetImg'
-import ResponsiveItemSlider from './components/ResponsiveItemSlider'
-import ApiForm from './components/form/ApiForm'
+import GalleryModal from './components/GalleryModal.vue';
+import SrcsetImage from './components/SrcsetImg.vue'
+import ResponsiveItemSlider from './components/ResponsiveItemSlider.vue'
+import ApiForm from './components/form/ApiForm.vue'
 import DynamicInput from './components/form/DynamicInput.vue'
-import Filter from './etc/filter'
-import CookieConsent from './components/cookieConsent/CookieConsent';
-import FileUploaderField from './components/FileUploaderField';
-import SecureEmail from './components/SecureEmail';
-import FadeOutText from './components/FadeOutText';
+import Filter from './etc/filter.js'
+import CookieConsent from './components/cookieConsent/CookieConsent.vue';
+import FileUploaderField from './components/FileUploaderField.vue';
+import SecureEmail from './components/SecureEmail.vue';
+import FadeOutText from './components/FadeOutText.vue';
 
 
 export default {

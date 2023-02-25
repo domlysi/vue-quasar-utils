@@ -1,14 +1,22 @@
-import {LocalStorage} from 'quasar';
-import {date as quasarDate} from 'quasar';
+import {date as quasarDate, useQuasar} from 'quasar';
 
 function parseDate(date, opts, locale = undefined) {
-    if (!date) { return date }
+    const $q = useQuasar()
+    if (!date) {
+        return date
+    }
     if (!quasarDate.isValid(date)) {
         console.error(`Dateformat invalid: ${date}`)
         return date
     }
     let dateObj = new Date(date)
-    let lang = locale || LocalStorage.getItem('language') || (navigator ? navigator.language : undefined)
+
+    let lang
+    if (typeof window !== 'undefined') {
+        lang = locale || $q.localStorage.getItem('language') || (window.navigator ? window.navigator.language : undefined)
+    } else {
+        lang = locale || $q.localStorage.getItem('language')
+    }
 
     try {
         return dateObj.toLocaleDateString(lang, opts)
@@ -20,8 +28,9 @@ function parseDate(date, opts, locale = undefined) {
 
 export default {
     currency: function ({value, locale=undefined, currency='EUR', minimumFractionDigits, maximumFractionDigits}) {
+        const $q = useQuasar()
         if (!locale) {
-            locale = LocalStorage.getItem('language') || 'de'
+            locale = $q.localStorage.getItem('language') || 'de'
         }
         return new Intl.NumberFormat(locale, {
             style: 'currency',
@@ -61,16 +70,25 @@ export default {
         };
         return parseDate(date, _options)
     },
-    
+
     dateTimeFormat: function (date, options=undefined, locale=undefined) {
-        if (!date) { return date }
+        if (!date) {
+            return date
+        }
         if (!quasarDate.isValid(date)) {
             console.error(`Dateformat invalid: ${date}`)
             return date
         }
+        const $q = useQuasar()
         let dateObj = new Date(date)
-        let lang = locale || LocalStorage.getItem('language') || (navigator ? navigator.language : undefined)
-    
+
+        let lang
+        if (typeof window !== 'undefined') {
+            lang = locale || $q.localStorage.getItem('language') || (window.navigator ? window.navigator.language : undefined)
+        } else {
+            lang = locale || $q.localStorage.getItem('language')
+        }
+
         return new Intl.DateTimeFormat(lang, options).format(dateObj)
     },
 
@@ -80,7 +98,7 @@ export default {
         }
         count = Number.parseInt(count)
         if (count === 1) { return word }
-        let _plural = wordPlural 
+        let _plural = wordPlural
         if (!wordPlural) {
             _plural = `${word}s`
         }
