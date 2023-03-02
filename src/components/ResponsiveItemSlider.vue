@@ -9,7 +9,13 @@
           <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: 'auto'}">
             <slot name="default" :item="item" :index="i"></slot>
           </div>
-          <div></div>
+        </div>
+        <div v-if="loadingMore">
+          <slot name="loadMoreWrapper">
+            <div :style="{width: `calc(${itemWidth} / 2)`}" class="full-height flex items-center justify-center">
+              <q-spinner-dots size="5rem"></q-spinner-dots>
+            </div>
+          </slot>
         </div>
       </div>
     </template>
@@ -75,6 +81,9 @@ export default {
     loading: {
       default: false,
     },
+    loadingMore: {
+      default: false,
+    },
     items: {
       required: true,
       default: () => [],
@@ -83,7 +92,7 @@ export default {
     itemWidth: {
       default: '80vw',
     },
-    itemMaxWidth: { default: '350px' },
+    itemMaxWidth: {default: '350px'},
     itemMinWidth: {default: '250px'},
     itemClass: {default: ''},
     colClasses: {default: 'col-6 col-md-4'},
@@ -117,7 +126,7 @@ export default {
     })
 
     return {
-      mobileWrapperRef
+      mobileWrapperRef,
     }
   }
 }
