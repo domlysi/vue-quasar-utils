@@ -4,13 +4,14 @@
       <q-card-section class="row items-center no-wrap">
         <slot>
           <div class="row full-width">
-            <div class="col-12 col-sm-8">
-
+            <div class="col">
               <div class="text-weight-bold">{{ title }}</div>
-              <div class="text-grey">{{ text }}</div>
+              <div class="text-grey full-width" style="white-space: pre-line;" v-html="text"></div>
             </div>
-            <div class="col-12 col-sm-4 flex justify-end">
-              <q-btn flat color="primary" @click="accept" dense :label="btnAcceptLabel" />
+            <div class="col-shrink flex items-center justify-end">
+              <div>
+                <q-btn :label="btnAcceptLabel" color="primary" dense flat @click="accept"/>
+              </div>
             </div>
           </div>
         </slot>
@@ -20,7 +21,7 @@
 </template>
 
 <script>
-import {getCurrentInstance, ref} from 'vue';
+import {ref} from 'vue';
 import {useQuasar} from 'quasar';
 
 export default {
