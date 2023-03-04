@@ -12,14 +12,12 @@
   </div>
 </template>
 
-<script setup>
-import {ref} from 'vue'
 
-const props = defineProps({
-  errors: {default: undefined},
-  hint: {default: undefined}
-})
-
-const errors = ref()
-
+<script>
+export default {
+  name: 'ApiCheckbox',
+  props: {
+    errors: {default: undefined}
+  }
+}
 </script>
