@@ -4,8 +4,7 @@
       :error-message="errors ? errors.join(' ') : undefined"
       v-bind="$attrs"
   >
-    <slot>
-    </slot>
+    <slot></slot>
   </q-input>
 </template>
 

@@ -1,10 +1,11 @@
 import ApiInput from './ApiInput.vue'
 import ApiSelect from './ApiSelect.vue';
+import ApiCheckbox from './ApiCheckbox.vue';
 
 
 export const fieldComponentMapping = {
     'field': ApiInput,
-    'boolean': ApiInput,
+    'boolean': ApiCheckbox,
     'string': ApiInput,
     'url': ApiInput,
     'email': ApiInput,

@@ -55,7 +55,7 @@ export default {
     },
     modelValue: {
       required: true
-    }
+    },
   },
 
   setup(props, context) {
@@ -80,6 +80,7 @@ export default {
             label: value.label,
             readOnly: value.read_only,
             required: value.required,
+            hint: value.help_text,
           },
           type: value.type
         })
