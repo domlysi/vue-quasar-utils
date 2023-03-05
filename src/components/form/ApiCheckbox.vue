@@ -17,7 +17,8 @@
 export default {
   name: 'ApiCheckbox',
   props: {
-    errors: {default: undefined}
+    errors: {default: undefined},
+    hint: {required: false}
   }
 }
 </script>
