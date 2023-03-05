@@ -33,7 +33,6 @@ export default {
       emailRef.value.dataset.hi = user
       emailRef.value.dataset.de = domain
       emailRef.value.dataset.this = tld
-      console.log(emailRef.value.dataset)
     })
 
     const click = function () {
