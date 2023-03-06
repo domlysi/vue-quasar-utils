@@ -1,8 +1,8 @@
 <template>
-  <q-form :class="formClass" @submit="onSubmit">
+  <q-form v-if="fields" :class="formClass" :dark="dark" @submit="onSubmit">
     <div class="col-12" v-if="errors?.non_field_errors">
       <slot name="nonFieldError">
-        <q-banner class="bg-negative text-white">{{ errors.non_field_errors.join(' ')}}</q-banner>
+        <q-banner class="bg-negative text-white">{{ errors.non_field_errors.join(' ') }}</q-banner>
       </slot>
     </div>
     <template v-for="field in fields" :key="field.attrs.name">
@@ -15,6 +15,7 @@
           v-model="formData[field.attrs.name]"
           :errors="errors ? errors[field.attrs.name]: undefined"
           @update.once=""
+          :dark="dark"
       >
         <slot :name="`default.${field.attrs.name}`"></slot>
       </component>
@@ -40,6 +41,9 @@ export default {
   props: {
     optionFields: {
       required: true,
+    },
+    dark: {
+      default: false
     },
     formClass: {
       default: 'row q-col-gutter-md'
