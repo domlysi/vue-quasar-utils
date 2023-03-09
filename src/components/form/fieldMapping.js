@@ -23,8 +23,10 @@ export const fieldComponentMapping = {
     'image upload': undefined,
     'list': undefined,
     'nested object': undefined,
+    'input': 'input'
 }
 export const fieldTypeMapping = {
+    'hidden': 'hidden',
     'field': ApiInput,
     'boolean': ApiInput,
     'string': 'text',
@@ -35,9 +37,9 @@ export const fieldTypeMapping = {
     'integer': ApiInput,
     'float': ApiInput,
     'decimal': ApiInput,
-    'date': undefined,
-    'datetime': undefined,
-    'time': undefined,
+    'date': 'date',
+    'datetime': 'date',
+    'time': 'time',
     'choice': undefined,
     'multiple choice': undefined,
     'file upload': undefined,

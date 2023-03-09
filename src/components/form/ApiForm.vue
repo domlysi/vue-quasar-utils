@@ -35,6 +35,8 @@
 import {ref, watch} from 'vue'
 import {fieldComponentMapping, fieldTypeMapping} from './fieldMapping';
 
+import deepmerge from 'deepmerge'
+
 export default {
   name: 'ApiForm',
   emits: ['update:modelValue', 'submit'],
@@ -76,9 +78,10 @@ export default {
       if (!props.optionFields) { return }
       let ret = []
       for (const [key, value] of Object.entries(props.optionFields)) {
+
         formData.value[key] = value.default
 
-        ret.push({
+        let fieldConf = {
           attrs: {
             name: key,
             label: value.label,
@@ -87,7 +90,11 @@ export default {
             hint: value.help_text,
           },
           type: value.type
-        })
+        }
+
+        // overwrite with fieldsConfig
+        fieldConf = deepmerge(fieldConf, props.fieldsConfig[key] || {})
+        ret.push(fieldConf)
       }
       return ret
     }
@@ -106,7 +113,7 @@ export default {
     }
 
     const inputAttrs = function (field) {
-      return Object.assign({}, field.attrs, context.attrs, props.fieldsConfig[field.attrs.name]?.attrs)
+      return deepmerge(field.attrs, context.attrs)
     }
 
     return {
