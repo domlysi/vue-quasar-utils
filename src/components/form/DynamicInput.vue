@@ -5,6 +5,9 @@
         v-bind="component.attrs"
         :error="!!errors ? true : undefined"
         :error-message="errors ? errors.join(' ') : undefined"
+        :model-value="component.attrs.modelValue"
+        v-on="component.handlers"
+        @update:modelValue="val => {$emit('update:modelValue', val); component.attrs.modelValue = val}"
     >
       <template v-for="(index, name) in $slots" v-slot:[name]="data">
         <slot :name="name" v-bind:slot="data"></slot>
@@ -134,7 +137,11 @@ export default defineComponent({
     errors: {
       default: undefined,
     },
+    modelValue: {
+      required: true
+    }
   },
+  emits: ['update:modelValue'],
   setup(props, ctx) {
     const component = computed(() => {
       if (props.fieldComponent) {
@@ -155,8 +162,10 @@ export default defineComponent({
           hint: props.field.help_text,
           readonly: props.field.read_only,
           maxlength: props.field.max_length,
+          modelValue: props.modelValue,
           ...ctx.attrs
-        }
+        },
+        handlers: {}
       }
 
       if (props.field.required) {
@@ -171,6 +180,12 @@ export default defineComponent({
               value: obj['value']
             }
           })
+        }
+      }
+
+      if (r['component'] === QCheckbox) {
+        if (ctx.attrs['no-indeterminate']) {
+          r.attrs['modelValue'] = r.attrs['modelValue'] || false
         }
       }
 
