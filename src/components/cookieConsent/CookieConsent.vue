@@ -43,7 +43,7 @@ export default {
     }
 
     const accept = function () {
-      $q.cookies.set('cookieConsent', 'true', { path: '/', expires: 400, sameSite: "Lax"},)
+      $q.cookies.set('cookieConsent', true, {path: '/', expires: 400, sameSite: "Lax"},)
       cookieDialog.value = false
       emit('accepted')
       emit('acceptedBtnClick')
