@@ -27,11 +27,11 @@ import {useQuasar} from 'quasar';
 export default {
   name: "CookieConsent",
   props: {
-    title: { required: false},
-    text: { required: false},
-    btnAcceptLabel: { required: false, default: 'Accept' },
+    title: {required: false},
+    text: {required: false},
+    btnAcceptLabel: {required: false, default: 'Accept'},
   },
-  emits: ['accepted'],
+  emits: ['accepted', 'acceptedBtnClick'],
   setup(props, {emit}) {
     const $q = useQuasar()
     let cookieDialog = ref(false)
@@ -46,6 +46,7 @@ export default {
       $q.cookies.set('cookieConsent', 'true', { path: '/', expires: 400, sameSite: "Lax"},)
       cookieDialog.value = false
       emit('accepted')
+      emit('acceptedBtnClick')
     }
 
     return {
