@@ -159,6 +159,7 @@ export default defineComponent({
         attrs: {
           ...TYPE_MAPPING[props.field.type]['attrs'],
           label: props.field.label,
+          required: props.field.required,
           hint: props.field.help_text,
           readonly: props.field.read_only,
           maxlength: props.field.max_length,
@@ -168,7 +169,7 @@ export default defineComponent({
         handlers: {}
       }
 
-      if (props.field.required) {
+      if (r.attrs.required) {
         r['attrs']['label'] = r['attrs']['label'] + ' *'
       }
 
