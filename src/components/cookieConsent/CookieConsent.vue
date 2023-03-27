@@ -3,7 +3,7 @@
     <q-card dark>
       <q-card-section class="row items-center no-wrap">
         <slot>
-          <div class="row full-width">
+          <div class="row full-width" data-nosnippet="true">
             <div class="col">
               <div class="text-weight-bold">{{ title }}</div>
               <div class="text-grey full-width" style="white-space: pre-line;" v-html="text"></div>
