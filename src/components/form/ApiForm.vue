@@ -44,6 +44,9 @@ export default {
     optionFields: {
       required: true,
     },
+    requiredSuffix: {
+      default: '*'
+    },
     dark: {
       default: false
     },
@@ -81,10 +84,12 @@ export default {
 
         formData.value[key] = value.default
 
+        let label = props.requiredSuffix && value.required ? `${value.label} ${props.requiredSuffix}` : value.label
+
         let fieldConf = {
           attrs: {
             name: key,
-            label: value.label,
+            label,
             readOnly: value.read_only,
             required: value.required,
             hint: value.help_text,
