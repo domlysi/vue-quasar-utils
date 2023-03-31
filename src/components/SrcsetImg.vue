@@ -15,6 +15,7 @@
           </div>
         </slot>
       </template>
+      <slot></slot>
     </template>
   </q-img>
 </template>
