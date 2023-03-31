@@ -1,8 +1,13 @@
 <template>
   <div class="row">
-    <div @drop.prevent="drop" @click="click" class="c-upload-wrapper q-mb-lg bg-grey-3 flex flex-center column cursor-pointer">
+    <div
+        v-if="!(!multiple && fileList.length > 0)"
+        class="c-upload-wrapper q-mb-lg bg-grey-3 flex flex-center column cursor-pointer"
+        @click="click"
+        @drop.prevent="drop"
+    >
       <div>
-        <q-icon name="fas fa-file-arrow-up" size="lg" />
+        <q-icon name="fas fa-file-arrow-up" size="lg"/>
         <input
             v-bind="$attrs"
             :multiple="multiple"
@@ -146,6 +151,7 @@ export default {
     }
     const removeFile = function (index) {
       fileList.value.splice(index, 1)
+      emitVal()
     }
 
     const drop = function (e) {
