@@ -14,7 +14,6 @@
           :rules="field.rules"
           v-model="formData[field.attrs.name]"
           :errors="errors ? errors[field.attrs.name]: undefined"
-          @update.once=""
           :dark="dark"
       >
         <slot :name="`default.${field.attrs.name}`"></slot>
@@ -76,13 +75,41 @@ export default {
       context.emit('submit', formData.value)
     }
 
+    watch(
+        () => props.modelValue,
+        () => {
+          parseFields()
+        },
+        {deep: true}
+    )
+
+    watch(
+        () => formData.value,
+        () => {
+          context.emit('update:modelValue', formData.value)
+        },
+        {deep: true}
+    )
+
+    watch(
+        () => props.optionFields,
+        (count, prevCount) => {
+          fields.value = parseFields()
+        }
+    )
 
     const parseFields = function () {
-      if (!props.optionFields) { return }
+      if (!props.optionFields) {
+        return
+      }
       let ret = []
       for (const [key, value] of Object.entries(props.optionFields)) {
 
-        formData.value[key] = value.default
+        if (props.modelValue && props.modelValue.hasOwnProperty(key)) {
+          formData.value[key] = props.modelValue[key]
+        } else {
+          formData.value[key] = value.default
+        }
 
         let label = props.requiredSuffix && value.required ? `${value.label} ${props.requiredSuffix}` : value.label
 
@@ -103,12 +130,6 @@ export default {
       }
       return ret
     }
-
-    watch(
-        () => props.optionFields,
-        (count, prevCount) => {
-          fields.value = parseFields()
-        })
 
     const getFieldComponent = (fieldType) => {
       return fieldComponentMapping[fieldType]
