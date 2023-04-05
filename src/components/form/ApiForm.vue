@@ -22,11 +22,11 @@
 
     <slot name="extras"></slot>
 
-    <div class="col-12">
-      <slot name="submit">
+    <slot name="submit">
+      <div class="col-12">
         <q-btn type="submit">Submit</q-btn>
-      </slot>
-    </div>
+      </div>
+    </slot>
   </q-form>
 </template>
 
@@ -68,7 +68,7 @@ export default {
 
   setup(props, context) {
     const fields = ref()
-    const formData = ref({})
+    const formData = ref(props.modelValue || {})
 
     const onSubmit = function (e) {
       context.emit('update:modelValue', formData.value)
@@ -104,10 +104,9 @@ export default {
       }
       let ret = []
       for (const [key, value] of Object.entries(props.optionFields)) {
-
         if (props.modelValue && props.modelValue.hasOwnProperty(key)) {
           formData.value[key] = props.modelValue[key]
-        } else {
+        } else if (value?.default) {
           formData.value[key] = value.default
         }
 
