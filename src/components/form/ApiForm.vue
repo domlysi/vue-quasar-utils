@@ -9,6 +9,7 @@
       <component
           :type="getFieldType(field.attrs.type)"
           :class="fieldClass"
+          :field="field"
           :is="getFieldComponent(field.type)"
           v-bind="inputAttrs(field)"
           :rules="field.rules"
@@ -64,6 +65,10 @@ export default {
     modelValue: {
       required: true
     },
+    showReadonlyFields: {
+      type: Boolean,
+      default: true
+    }
   },
 
   setup(props, context) {
@@ -91,44 +96,50 @@ export default {
         {deep: true}
     )
 
-    watch(
-        () => props.optionFields,
-        (count, prevCount) => {
-          fields.value = parseFields()
-        }
-    )
 
     const parseFields = function () {
       if (!props.optionFields) {
         return
       }
       let ret = []
-      for (const [key, value] of Object.entries(props.optionFields)) {
-        if (props.modelValue && props.modelValue.hasOwnProperty(key)) {
-          formData.value[key] = props.modelValue[key]
-        } else if (value?.default) {
-          formData.value[key] = value.default
+      for (const [fieldKey, fieldValue] of Object.entries(props.optionFields)) {
+        if (props.showReadonlyFields && fieldValue.read_only) {
+          continue
+        }
+        if (props.modelValue && props.modelValue.hasOwnProperty(fieldKey)) {
+          formData.value[fieldKey] = props.modelValue[fieldKey]
+        } else if (fieldValue?.default) {
+          formData.value[fieldKey] = fieldValue.default
         }
 
-        let label = props.requiredSuffix && value.required ? `${value.label} ${props.requiredSuffix}` : value.label
+        let label = props.requiredSuffix && fieldValue.required ? `${fieldValue.label} ${props.requiredSuffix}` : fieldValue.label
 
         let fieldConf = {
           attrs: {
-            name: key,
+            name: fieldKey,
             label,
-            readOnly: value.read_only,
-            required: value.required,
-            hint: value.help_text,
+            readOnly: fieldValue.read_only,
+            required: fieldValue.required,
+            hint: fieldValue.help_text,
+            options: fieldValue.choices,
           },
-          type: value.type
+          type: fieldValue.type
         }
 
         // overwrite with fieldsConfig
-        fieldConf = deepmerge(fieldConf, props.fieldsConfig[key] || {})
+        fieldConf = deepmerge(fieldConf, props.fieldsConfig[fieldKey] || {})
         ret.push(fieldConf)
       }
       return ret
     }
+
+    watch(
+        () => props.optionFields,
+        (count, prevCount) => {
+          fields.value = parseFields()
+        },
+        {immediate: true}
+    )
 
     const getFieldComponent = (fieldType) => {
       return fieldComponentMapping[fieldType]
