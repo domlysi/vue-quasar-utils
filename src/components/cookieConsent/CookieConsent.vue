@@ -59,8 +59,8 @@
         </q-list>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn v-close-popup flat label="Cancel"></q-btn>
-        <q-btn v-close-popup color="primary" label="Save settings" outline @click="save"></q-btn>
+        <q-btn v-close-popup :label="btnCancelLabel" flat></q-btn>
+        <q-btn v-close-popup :label="btnSaveLabel" color="primary" outline @click="save"></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -79,6 +79,8 @@ export default {
     btnAcceptLabel: {required: false, default: 'Accept all'},
     btnDenyLabel: {required: false, default: 'Only necessary'},
     btnSettingLabel: {required: false, default: 'Settings'},
+    btnSaveLabel: {required: false, default: 'Save'},
+    btnCancelLabel: {required: false, default: 'Cancel'},
     modelValue: {default: false, required: true}
   },
   emits: ['update:modelValue', 'accepted', 'acceptedBtnClick', 'deny', 'denyBtnClick', 'close'],
