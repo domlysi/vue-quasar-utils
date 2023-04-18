@@ -141,7 +141,6 @@ export default {
     }
 
     const settingsModal = function () {
-      console.log('settings modal')
       showSettings.value = true
     }
 
