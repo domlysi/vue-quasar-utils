@@ -72,7 +72,7 @@ import {Cookies} from 'quasar';
 import {cookieConsent} from './CookieConsent.js'
 
 export default {
-  name: "CookieConsent",
+  name: 'CookieConsent',
   props: {
     title: {required: false},
     text: {required: false},
@@ -89,7 +89,7 @@ export default {
     const cookieScripts = ref([])
     const cookieStatus = reactive({})
 
-    if (Cookies.get('cookieConsent')) {
+    if (Cookies.get('cookieConsentDialog')) {
       cookieConsent.accept({all: false})
     } else {
       emit('update:modelValue', true)

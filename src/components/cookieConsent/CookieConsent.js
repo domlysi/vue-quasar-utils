@@ -20,8 +20,8 @@ class CookieConsentCls {
   }
 
   accept({all}) {
-    if (!Cookies.has('cookieConsent')) {
-      Cookies.set('cookieConsent', true, {path: '/', sameSite: "Lax"},)
+    if (!Cookies.has('cookieConsentDialog')) {
+      Cookies.set('cookieConsentDialog', true, {path: '/', sameSite: "Lax", expires: 90},)
     }
 
     // set all cookies separately true
