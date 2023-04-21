@@ -89,9 +89,7 @@ export default {
     const cookieScripts = ref([])
     const cookieStatus = reactive({})
 
-    if (Cookies.get('cookieConsentDialog')) {
-      cookieConsent.accept({all: false})
-    } else {
+    if (!Cookies.get('cookieConsentDialog')) {
       emit('update:modelValue', true)
     }
 

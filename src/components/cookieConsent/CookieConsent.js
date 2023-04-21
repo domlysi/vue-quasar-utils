@@ -2,6 +2,7 @@ import {Cookies} from 'quasar'
 
 class CookieConsentCls {
   cookieScripts = []
+  isProcessed = false
 
   getAll() {
     return this.cookieScripts
@@ -19,6 +20,24 @@ class CookieConsentCls {
     })
   }
 
+  processScripts() {
+    if (this.isProcessed) return
+    this.cookieScripts.forEach(item => {
+      // if cookie is essential: set true
+      if (item.required || item.isActive()) {
+        item.onAccept()
+      } else {
+        item.onDecline()
+      }
+    })
+    this.isProcessed = true
+  }
+
+  init() {
+    if (!Cookies.get('cookieConsentDialog')) return
+    this.processScripts()
+  }
+
   accept({all}) {
     if (!Cookies.has('cookieConsentDialog')) {
       Cookies.set('cookieConsentDialog', true, {path: '/', sameSite: "Lax", expires: 90},)
@@ -31,14 +50,7 @@ class CookieConsentCls {
       })
     }
 
-    this.cookieScripts.forEach(item => {
-      // if cookie is essential: set true
-      if (item.required || item.isActive()) {
-        item.onAccept()
-      } else {
-        item.onDecline()
-      }
-    })
+    this.processScripts()
   }
 }
 
