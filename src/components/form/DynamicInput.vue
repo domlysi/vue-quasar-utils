@@ -9,7 +9,7 @@
         v-on="component.handlers"
         @update:modelValue="val => {$emit('update:modelValue', val); component.attrs.modelValue = val}"
     >
-      <template v-for="(index, name) in $slots" v-slot:[name]="data">
+      <template v-for="(_, name) in $slots" v-slot:[name]="data">
         <slot :name="name" v-bind:slot="data"></slot>
       </template>
     </component>
@@ -163,6 +163,7 @@ export default defineComponent({
           hint: props.field.help_text,
           readonly: props.field.read_only,
           maxlength: props.field.max_length,
+          behavior: 'menu',
           modelValue: props.modelValue,
           ...ctx.attrs
         },
@@ -174,6 +175,7 @@ export default defineComponent({
       }
 
       if (r['component'] === QSelect) {
+        r.attrs['modelValue'] = r.attrs['modelValue'] || null
         if (props.field.choices) {
           r.attrs['options'] = props.field.choices.flatMap((obj) => {
             return {
@@ -185,6 +187,7 @@ export default defineComponent({
       }
 
       if (r['component'] === QCheckbox) {
+        r.attrs['class'] = !r.attrs?.class ? 'q-py-sm' : r.attrs.class
         if (ctx.attrs['no-indeterminate']) {
           r.attrs['modelValue'] = r.attrs['modelValue'] || false
         }
@@ -199,7 +202,7 @@ export default defineComponent({
     })
 
     return {
-      component
+      component,
     }
   }
 })
