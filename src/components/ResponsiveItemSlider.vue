@@ -110,7 +110,7 @@ export default {
 
     const handleScroll = debounce((e) => {
       if (scrollEventListenerTriggered.value) return
-      const curPos = e.target.scrollLeft + e.target.clientWidth
+      const curPos = (e.target.scrollLeft || 0) + e.target.clientWidth
       const endPos = e.target.scrollWidth
       if (curPos + props.infiniteScrollOffset >= endPos) {
         scrollEventListenerTriggered.value = true
