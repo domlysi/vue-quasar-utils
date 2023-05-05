@@ -6,7 +6,7 @@
       <div ref="mobileWrapperRef" class="full-width flex no-wrap q-gutter-x-lg q-py-lg q-pr-lg"
            style="overflow-x: scroll">
         <div v-for="(item, i) in items" :key="i" :class="itemClass + (!isMarginLeft && i === 0 ? ' q-ml-none' : '')">
-          <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: 'auto'}">
+          <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: '100%'}">
             <slot name="default" :item="item" :index="i"></slot>
           </div>
         </div>
