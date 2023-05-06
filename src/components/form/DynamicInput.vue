@@ -175,7 +175,7 @@ export default defineComponent({
       }
 
       if (r['component'] === QSelect) {
-        r.attrs['modelValue'] = r.attrs['modelValue'] || null
+        r.attrs['modelValue'] = r.attrs['modelValue'] === undefined ? null : r.attrs['modelValue']
         if (props.field.choices) {
           r.attrs['options'] = props.field.choices.flatMap((obj) => {
             return {
