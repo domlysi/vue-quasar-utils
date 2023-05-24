@@ -1,6 +1,6 @@
-interface SrcSetItem {
-    size: [number, number]
-    src: string
+export interface SrcSetItem {
+  size: [number, number]
+  src: string
 }
 
 export interface SrcsetImage {
