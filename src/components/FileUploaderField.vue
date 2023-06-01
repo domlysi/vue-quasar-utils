@@ -1,38 +1,52 @@
 <template>
   <div class="row">
     <div
-        v-if="!(!multiple && fileList.length > 0)"
-        class="c-upload-wrapper q-mb-lg bg-grey-3 flex flex-center column cursor-pointer"
-        @click="click"
-        @drop.prevent="drop"
+      v-if="!(!multiple && fileList.length > 0) && (!maxFiles || (multiple && fileList.length < maxFiles))"
+      class="c-upload-wrapper q-mb-lg bg-grey-3 flex flex-center column cursor-pointer"
+      @click="click"
+      @drop.prevent="drop"
     >
       <div>
         <q-icon name="fas fa-file-arrow-up" size="lg"/>
         <input
-            v-bind="$attrs"
-            :multiple="multiple"
-            @change="changeFile"
-            ref="fileInput"
-            type="file"
-            class="hidden"
-            name="files"
+          ref="fileInput"
+          :multiple="multiple"
+          class="hidden"
+          name="files"
+          type="file"
+          v-bind="$attrs"
+          @change="changeFile"
         >
       </div>
       <div>{{ label }}</div>
+      <div v-if="multiple && maxFiles" class="text-muted">(max. {{ maxFiles }} Dateien insgesamt)</div>
     </div>
 
-    <template v-if="fileList">
+    <template v-if="fileList?.length">
+      <div v-if="validationErrors?.length" class="col-12 q-mb-md">
+        <q-banner v-for="err in validationErrors" :key="err" class="bg-warning q-mb-sm" rounded>
+          {{ err }}
+        </q-banner>
+      </div>
+
+      <div class="col-12">
+        {{ errors }}
+      </div>
       <div class="col-12">
         <div class="">
-
           <template v-if="!gallery">
             <template v-for="(file, index) in fileList" :key="file.name">
               <div
-                  class="text-bold flex items-center justify-between no-wrap q-my-md"
+                class="text-bold flex items-center justify-between no-wrap q-my-md"
               >
                 <div class="flex items-center no-wrap">
-                  <div><q-icon name="far fa-file" size="lg"/></div>
-                  <div class="q-px-sm" style="overflow-wrap: anywhere">{{file.name}} ({{fileSize(file)}})</div>
+                  <div>
+                    <q-icon name="far fa-file" size="lg"/>
+                  </div>
+                  <div class="q-px-sm" style="overflow-wrap: anywhere">{{ file.name }} ({{ fileSize(file) }})</div>
+                  <div v-if="errors && errors[index]" class="text-center text-negative q-mb-sm">
+                    <div v-for="err in errors[index]" :key="err">{{ err }}</div>
+                  </div>
                 </div>
                 <div>
                   <q-btn @click="removeFile(index)" round flat size="sm"><q-icon name="fas fa-trash"></q-icon></q-btn>
@@ -43,21 +57,30 @@
 
           <!-- Gallery view -->
           <template v-else>
-            <div class="row q-col-gutter-sm">
+            <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-6" v-for="(file, index) in fileList" :key="file.name">
                 <template v-if="file.type.startsWith('image/')">
-                  <img style="max-height: 200px; object-fit: contain" class="full-width" :src="getUrl(file)" />
+                  <img :src="getUrl(file)" class="full-width" style="max-height: 200px; object-fit: contain"/>
                 </template>
                 <template v-else>
                   <div class="text-bold text-center" style="overflow-wrap: anywhere">
-                    <q-icon name="far fa-file" /> {{file.name}}
+                    <q-icon name="far fa-file"/>
+                    {{ file.name }}
                   </div>
                 </template>
                 <div class="text-center">
-                  <div>{{fileSize(file)}}</div>
+                  <div>{{ fileSize(file) }}</div>
+                  <div v-if="errors && errors[index]" class="text-center text-negative q-mb-sm">
+                    <div v-for="err in errors[index]" :key="err">{{ err }}</div>
+                  </div>
+
                   <template v-if="ordering">
-                    <q-btn flat round @click="setPosImageUp(index)"><q-icon size="xs" name="fas fa-angle-up"/></q-btn>
-                    <q-btn flat round @click="setPosImageDown(index)"><q-icon size="xs" name="fas fa-angle-down"/></q-btn>
+                    <q-btn flat round @click="setPosImageUp(index)">
+                      <q-icon name="fas fa-angle-up" size="xs"/>
+                    </q-btn>
+                    <q-btn flat round @click="setPosImageDown(index)">
+                      <q-icon name="fas fa-angle-down" size="xs"/>
+                    </q-btn>
                   </template>
 
                   <q-btn @click="removeFile(index)" round flat size="sm">
@@ -75,6 +98,7 @@
 
 <script lang="ts">
 import {ref, watchEffect} from 'vue';
+import {Notify} from 'quasar'
 
 function returnFileSize(number) {
   if (number < 1024) {
@@ -104,6 +128,12 @@ export default {
     },
     errors: {
       type: Array
+    },
+    maxFiles: {
+      type: Number
+    },
+    maxFileSizeInMB: {
+      type: Number
     }
   },
   emits: ['update:modelValue'],
@@ -111,6 +141,7 @@ export default {
     const fileInput = ref<HTMLInputElement>()
     const fileList = ref<Array<File>>([])
     const tmpError = ref()
+    const validationErrors = ref([])
 
     function preventDefaults(e) {
       e.preventDefault()
@@ -132,16 +163,51 @@ export default {
 
 
     const click = function () {
-      if (!fileInput.value) { return }
+      if (!fileInput.value) {
+        return
+      }
+      validationErrors.value = []
       fileInput.value.click()
     }
 
+    const addFile = function (file: File): boolean {
+      /**
+       *  @return {boolean} True if added else false
+       */
+      if (props.maxFiles && fileList.value.length >= props.maxFiles) {
+        Notify.create({
+          position: 'top',
+          message: 'Maximale Anzahl von Dateien erreicht.',
+          color: 'warning',
+          caption: `${file.name}`
+        })
+        // validationErrors.value.push(`"${file.name}" konnte nicht hinzugefügt werden. Maximale Anzahl von ${props.maxFiles} Dateien erreicht.`)
+        return false
+      }
+
+      if (file.size > props.maxFileSizeInMB * 1024 * 1024) {
+        Notify.create({
+          position: 'top',
+          message: `Maximale Größe von ${props.maxFileSizeInMB} MB überschritten.`,
+          color: 'warning',
+          caption: `${file.name}`
+        })
+        // validationErrors.value.push(`"${file.name}" konnte nicht hinzugefügt werden. Maximale Größe von ${props.maxFileSizeInMB} MB überschritten.`)
+        return false
+      }
+
+      fileList.value.push(file)
+      return true
+    }
+
     const changeFile = function () {
-      if (!fileInput.value || !fileInput.value?.files) { return }
+      if (!fileInput.value || !fileInput.value?.files) {
+        return
+      }
 
       for (let index = 0; index < fileInput.value.files.length; index++) {
         const file: File = fileInput.value.files[index];
-        fileList.value.push(file)
+        addFile(file)
       }
       emitVal()
     }
@@ -156,7 +222,7 @@ export default {
 
     const drop = function (e) {
       for (let index = 0; index < e.dataTransfer.files.length; index++) {
-        fileList.value.push(e.dataTransfer.files[index])
+        addFile(e.dataTransfer.files[index])
       }
       emitVal()
     }
@@ -190,7 +256,8 @@ export default {
       fileSize,
       setPosImageUp,
       setPosImageDown,
-      tmpError
+      tmpError,
+      validationErrors,
     }
   }
 }
