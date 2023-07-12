@@ -81,7 +81,8 @@ export default {
     btnSettingLabel: {required: false, default: 'Settings'},
     btnSaveLabel: {required: false, default: 'Save'},
     btnCancelLabel: {required: false, default: 'Cancel'},
-    modelValue: {default: false, required: true}
+    modelValue: {default: false, required: true},
+    disabled: {default: false}
   },
   emits: ['update:modelValue', 'accepted', 'acceptedBtnClick', 'deny', 'denyBtnClick', 'close'],
   setup(props, {emit}) {
@@ -90,6 +91,7 @@ export default {
     const cookieStatus = reactive({})
 
     if (!Cookies.get('cookieConsentDialog')) {
+      if (props.disabled === true) return
       emit('update:modelValue', true)
     }
 

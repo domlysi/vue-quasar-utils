@@ -7,15 +7,16 @@
     </div>
     <template v-for="field in fields" :key="field.attrs.name">
       <component
-          :type="getFieldType(field.attrs.type)"
-          :class="fieldClass"
-          :field="field"
-          :is="getFieldComponent(field.type)"
-          v-bind="inputAttrs(field)"
-          :rules="field.rules"
-          v-model="formData[field.attrs.name]"
-          :errors="errors ? errors[field.attrs.name]: undefined"
-          :dark="dark"
+        :is="getFieldComponent(field.type)"
+        v-model="formData[field.attrs.name]"
+        :class="fieldClass"
+        :dark="dark"
+        :disable="disabled"
+        :errors="errors ? errors[field.attrs.name]: undefined"
+        :field="field"
+        :rules="field.rules"
+        :type="getFieldType(field.attrs.type)"
+        v-bind="inputAttrs(field)"
       >
         <slot :name="`default.${field.attrs.name}`"></slot>
       </component>
@@ -32,10 +33,11 @@
 </template>
 
 <script>
-import {ref, watch} from 'vue'
+import {computed, ref, watch} from 'vue'
 import {fieldComponentMapping, fieldTypeMapping} from './fieldMapping';
 
 import deepmerge from 'deepmerge'
+import {cleanDataByFields} from '../../etc/utils.js';
 
 export default {
   name: 'ApiForm',
@@ -50,6 +52,13 @@ export default {
     dark: {
       default: false
     },
+    disabled: {
+      default: false
+    },
+    cleanData: {
+      default: false,
+      type: Boolean,
+    },
     formClass: {
       default: 'row q-col-gutter-md'
     },
@@ -63,37 +72,44 @@ export default {
       default: undefined
     },
     modelValue: {
-      required: true
+      required: true,
+      default: {}
     },
     showReadonlyFields: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
 
   setup(props, context) {
     const fields = ref()
-    const formData = ref(props.modelValue || {})
+    const formData = ref(props.modelValue)
 
+    const formDataParsed = computed(() => {
+      if (props.cleanData) {
+        return cleanDataByFields(formData.value, fields.value)
+      }
+      return deepmerge(props.modelValue, formData.value)
+    })
     const onSubmit = function (e) {
-      context.emit('update:modelValue', formData.value)
-      context.emit('submit', formData.value)
+      context.emit('update:modelValue', formDataParsed.value)
+      context.emit('submit', formDataParsed.value)
     }
 
     watch(
-        () => props.modelValue,
-        () => {
-          parseFields()
-        },
-        {deep: true}
+      () => props.modelValue,
+      () => {
+        parseFields()
+      },
+      {deep: true}
     )
 
     watch(
-        () => formData.value,
-        () => {
-          context.emit('update:modelValue', formData.value)
-        },
-        {deep: true}
+      () => formData.value,
+      () => {
+        context.emit('update:modelValue', formDataParsed.value)
+      },
+      {deep: true}
     )
 
 
@@ -103,7 +119,10 @@ export default {
       }
       let ret = []
       for (const [fieldKey, fieldValue] of Object.entries(props.optionFields)) {
-        if (props.showReadonlyFields && fieldValue.read_only) {
+        // skip if field is set to null
+        if (props.fieldsConfig[fieldKey] === null) continue
+
+        if (!props.showReadonlyFields && fieldValue.read_only) {
           continue
         }
         if (props.modelValue && props.modelValue.hasOwnProperty(fieldKey)) {
@@ -118,9 +137,10 @@ export default {
           attrs: {
             name: fieldKey,
             label,
-            readOnly: fieldValue.read_only,
+            readonly: fieldValue.read_only,
             required: fieldValue.required,
             hint: fieldValue.help_text,
+            multiple: fieldValue.type === 'multiple choice',
             options: fieldValue.choices,
           },
           type: fieldValue.type
@@ -134,11 +154,11 @@ export default {
     }
 
     watch(
-        () => props.optionFields,
-        (count, prevCount) => {
-          fields.value = parseFields()
-        },
-        {immediate: true}
+      () => props.optionFields,
+      (count, prevCount) => {
+        fields.value = parseFields()
+      },
+      {immediate: true}
     )
 
     const getFieldComponent = (fieldType) => {
