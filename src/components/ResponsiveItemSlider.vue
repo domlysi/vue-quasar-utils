@@ -76,7 +76,7 @@ export default {
   emits: ['load'],
   props: {
     infiniteScrollOffset: {
-      default: 400,
+      default: 1200,
     },
     loading: {
       default: false,
