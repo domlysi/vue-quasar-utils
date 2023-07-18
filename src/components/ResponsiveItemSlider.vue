@@ -3,8 +3,8 @@
   <template v-if="$q.screen.xs || onlyVertical ">
 
     <template v-if="!loading && items">
-      <div ref="mobileWrapperRef" :class="wrapperClass" class="full-width flex no-wrap q-gutter-x-lg q-py-lg q-pr-lg"
-           style="overflow-x: auto">
+      <div ref="mobileWrapperRef" :class="wrapperClass" :style="wrapperStyle"
+           class="flex no-wrap q-gutter-x-lg q-py-lg q-pr-lg" style="overflow-x: auto">
         <div v-for="(item, i) in items" :key="i" :class="itemClass + (!isMarginLeft && i === 0 ? ' q-ml-none' : '')">
           <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: '100%'}">
             <slot name="default" :item="item" :index="i"></slot>
@@ -38,7 +38,7 @@
   <!-- desktop -->
   <template v-else-if="items">
     <div :class="withContainer ? 'container' : ''">
-      <div :class="wrapperClass" class="row q-col-gutter-md">
+      <div :class="wrapperClass" :style="wrapperStyle" class="row q-col-gutter-md">
 
         <template v-if="!loading">
           <div
@@ -98,7 +98,8 @@ export default {
     itemMaxWidth: {default: '350px'},
     itemMinWidth: {default: '250px'},
     itemClass: {default: ''},
-    wrapperClass: {default: ''},
+    wrapperClass: {required: false},
+    wrapperStyle: {required: false},
     colClasses: {default: 'col-6 col-md-4'},
     onlyVertical: {default: false},
     isMarginLeft: {default: true},
