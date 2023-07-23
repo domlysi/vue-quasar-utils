@@ -4,7 +4,7 @@
 
     <template v-if="!loading && items">
       <div ref="mobileWrapperRef" :class="wrapperClass" :style="wrapperStyle"
-           class="flex no-wrap q-gutter-x-lg q-py-lg q-pr-lg" style="overflow-x: auto">
+           class="flex no-wrap q-gutter-x-lg q-pa-lg" style="overflow-x: auto">
         <div v-for="(item, i) in items" :key="i" :class="itemClass + (!isMarginLeft && i === 0 ? ' q-ml-none' : '')">
           <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: '100%'}">
             <slot name="default" :item="item" :index="i"></slot>
@@ -21,11 +21,11 @@
     </template>
 
     <template v-if="loading">
-      <div class="full-width flex no-wrap q-gutter-x-lg q-py-lg q-pr-lg" style="overflow-x: scroll">
+      <div class="full-width flex no-wrap q-gutter-x-lg q-pa-lg" style="overflow-x: scroll">
         <div v-for="i in skeletonAmount" :key="i">
           <div :style="{width: itemWidth}">
             <slot name="skeletonMobile">
-              <q-skeleton height="300px" />
+              <q-skeleton height="300px"/>
             </slot>
           </div>
           <div></div>
