@@ -1,18 +1,22 @@
 <template>
   <div>
     <component
-        :is="component.component"
-        v-bind="component.attrs"
-        :error="!!errors ? true : undefined"
-        :error-message="errors ? errors.join(' ') : undefined"
-        :model-value="component.attrs.modelValue"
-        v-on="component.handlers"
-        @update:modelValue="val => {$emit('update:modelValue', val); component.attrs.modelValue = val}"
+      :is="component.component"
+      :error="!!errors ? true : undefined"
+      :error-message="errors ? errors.join(' ') : undefined"
+      :model-value="component.attrs.modelValue"
+      v-bind="component.attrs"
+      v-on="component.handlers"
+      @update:modelValue="val => {$emit('update:modelValue', val); component.attrs.modelValue = val}"
     >
       <template v-for="(_, name) in $slots" v-slot:[name]="data">
         <slot :name="name" v-bind:slot="data"></slot>
       </template>
     </component>
+
+    <template v-if="component.component?.name === 'QCheckbox' && component.attrs.hint">
+      <div class="text-muted text-small">{{ component.attrs.hint }}</div>
+    </template>
   </div>
 </template>
 
