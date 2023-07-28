@@ -4,7 +4,7 @@
 
     <template v-if="!loading && items">
       <div ref="mobileWrapperRef" :class="wrapperClass" :style="wrapperStyle"
-           class="flex no-wrap q-gutter-x-lg q-pa-lg" style="overflow-x: auto">
+           class="flex no-wrap q-gutter-x-lg q-pa-lg" style="overflow-x: auto" @scroll="handleScroll">
         <div v-for="(item, i) in items" :key="i" :class="itemClass + (!isMarginLeft && i === 0 ? ' q-ml-none' : '')">
           <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: '100%'}">
             <slot name="default" :item="item" :index="i"></slot>
@@ -51,12 +51,12 @@
 
         <template v-if="loading">
           <div
-              v-for="i in skeletonAmount" :key="i"
-              :class="`${colClasses} ${itemClass}`"
+            v-for="i in skeletonAmount" :key="i"
+            :class="`${colClasses} ${itemClass}`"
           >
             <slot name="skeleton">
               <q-skeleton
-                  height="300px"
+                height="300px"
               >
               </q-skeleton>
             </slot>
@@ -105,15 +105,38 @@ export default {
     isMarginLeft: {default: true},
     withContainer: {default: true},
     skeletonAmount: {default: 6},
-    skeletonAmountMobile: {default: 2}
+    skeletonAmountMobile: {default: 2},
+    id: {required: false, type: String},
+    saveScrollPos: {default: true},
+    store: {required: false}
   },
 
   setup(props, ctx) {
     const mobileWrapperRef = ref()
-    const scrollEventListener = ref()
     const scrollEventListenerTriggered = ref(false)
+    const scrollPosKey = `${props.id}_scroll_pos`
+
+    const savePosition = function (store, key, pos) {
+      if (!store) return
+      store[key] = pos
+    }
+
+    const loadPosition = function (store, key) {
+      if (store?.hasOwnProperty(key) && mobileWrapperRef.value) {
+        const pos = Number.parseInt(store[key])
+        mobileWrapperRef.value.scrollTo(pos, 0)
+      }
+    }
 
     const handleScroll = debounce((e) => {
+      if (props.id && props.saveScrollPos) {
+        try {
+          savePosition(props.store, scrollPosKey, e.target.scrollLeft)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
       if (!props.infiniteScroll) return
       if (scrollEventListenerTriggered.value) return
       const curPos = (e.target.scrollLeft || 0) + e.target.clientWidth
@@ -126,13 +149,18 @@ export default {
     })
 
     watchEffect(() => {
-      if (!props.loading && props.items && !scrollEventListener.value && mobileWrapperRef.value) {
-        scrollEventListener.value = mobileWrapperRef.value.addEventListener('scroll', handleScroll)
+      if (props.items?.length && props.saveScrollPos) {
+        try {
+          loadPosition(props.store, scrollPosKey)
+        } catch (e) {
+          console.error(e)
+        }
       }
     })
 
     return {
       mobileWrapperRef,
+      handleScroll,
     }
   }
 }
