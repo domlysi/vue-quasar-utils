@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {computed, ref, watch} from 'vue'
+import {computed, ref, toRef, watch} from 'vue'
 import {fieldComponentMapping, fieldTypeMapping} from './fieldMapping';
 
 import deepmerge from 'deepmerge'
@@ -83,7 +83,8 @@ export default {
 
   setup(props, context) {
     const fields = ref()
-    const formData = ref(props.modelValue)
+    const modelVal = toRef(props, 'modelValue')
+    const formData = ref(modelVal.value)
 
     const formDataParsed = computed(() => {
       if (props.cleanData) {
@@ -91,7 +92,7 @@ export default {
       }
       return deepmerge(props.modelValue, formData.value)
     })
-    const onSubmit = function (e) {
+    const onSubmit = function () {
       context.emit('update:modelValue', formDataParsed.value)
       context.emit('submit', formDataParsed.value)
     }
@@ -155,7 +156,7 @@ export default {
 
     watch(
       () => props.optionFields,
-      (count, prevCount) => {
+        () => {
         fields.value = parseFields()
       },
       {immediate: true}
