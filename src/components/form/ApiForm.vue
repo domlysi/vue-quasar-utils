@@ -123,7 +123,7 @@ export default {
         // skip if field is set to null
         if (props.fieldsConfig[fieldKey] === null) continue
 
-        if (!props.showReadonlyFields && fieldValue.read_only) {
+        if (!props.showReadonlyFields && fieldValue.read_only && !props.fieldsConfig.hasOwnProperty(fieldKey)) {
           continue
         }
         if (props.modelValue && props.modelValue.hasOwnProperty(fieldKey)) {
