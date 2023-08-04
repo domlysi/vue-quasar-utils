@@ -21,7 +21,7 @@
     </template>
 
     <template v-if="loading">
-      <div class="full-width flex no-wrap q-gutter-x-lg q-pa-lg" style="overflow-x: scroll">
+      <div class="flex no-wrap q-gutter-x-lg q-pa-lg" style="overflow-x: scroll">
         <div v-for="i in skeletonAmount" :key="i">
           <div :style="{width: itemWidth}">
             <slot name="skeletonMobile">
