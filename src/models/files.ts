@@ -4,9 +4,7 @@ export interface SrcSetItem {
 }
 
 export interface SrcsetImage {
-    uuid: string
-    image: {
-        path: string
-        srcset: Array<SrcSetItem>
-    }
+  path: string
+  srcset: Array<SrcSetItem>
+  webp?: string
 }
