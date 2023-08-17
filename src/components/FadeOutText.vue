@@ -27,6 +27,10 @@ const props = defineProps({
   trashhold: {
     default: 100,
     type: Number
+  },
+  backgroundColor: {
+    default: 'white',
+    type: String
   }
 })
 
@@ -38,12 +42,13 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+$backgroundColor: v-bind('backgroundColor');
 .fade-out-text-wrapper {
   position: relative;
 
   & > .overlay {
     position: absolute;
-    background: linear-gradient(to top, white 2rem, rgba(255, 255, 255, 0));;
+    background: linear-gradient(to top, $backgroundColor 2rem, rgba(255, 255, 255, 0));;
     bottom: 0;
     left: 0;
     right: 0;
