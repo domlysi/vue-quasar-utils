@@ -232,16 +232,16 @@ export default {
     })
 
     const setPosImageUp = function (pos) {
-      if (pos >= fileList.value.length) return
+      if (pos <= 0) return
       const element = fileList.value.splice(pos, 1)[0];
-      fileList.value.splice(pos + 1, 0, element);
+      fileList.value.splice(pos - 1, 0, element);
       emitVal()
     }
 
     const setPosImageDown = function (pos) {
-      if (pos <= 0) return
+      if (pos >= fileList.value.length) return
       const element = fileList.value.splice(pos, 1)[0];
-      fileList.value.splice(pos - 1, 0, element);
+      fileList.value.splice(pos + 1, 0, element);
       emitVal()
     }
 
