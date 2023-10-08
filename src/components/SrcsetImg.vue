@@ -2,6 +2,7 @@
   <q-img
       v-bind="$attrs"
       :srcset="srcSetInline"
+      :sizes="sizes"
       :src="src"
   >
     <template #default>
@@ -36,7 +37,22 @@ export default {
     srcSetInline() {
       if (!this.srcset) { return }
       return this.srcset.flatMap(obj =>`${obj.src} ${obj.size[0]}w`).join(', ')
+    },
+    sizes() {
+      if (!this.srcset) { return }
+      this.srcset.sort((a, b) => a.size[0] - b.size[0]);
+
+      // Convert to the sizes attribute format
+      return this.srcset.map((img, index) => {
+        if (index < this.srcset.length - 1) {
+          return `(max-width: ${img.size[0]}px) ${img.size[0]}px`;
+        } else {
+          return `${img.size[0]}px`;
+        }
+      }).join(', ')
     }
+
   }
+
 }
 </script>
