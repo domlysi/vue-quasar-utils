@@ -4,7 +4,7 @@
 
     <template v-if="!loading && items">
       <div ref="mobileWrapperRef" :class="wrapperClass" :style="wrapperStyle"
-           class="flex no-wrap q-gutter-x-lg q-pa-lg" style="overflow-x: auto" @scroll="handleScroll">
+           class="flex no-wrap" style="overflow-x: auto" @scroll="handleScroll">
         <div v-for="(item, i) in items" :key="i" :class="itemClass + (!isMarginLeft && i === 0 ? ' q-ml-none' : '')">
           <div :style="{width: itemWidth, maxWidth: itemMaxWidth, minWidth: itemMinWidth, height: '100%'}">
             <slot name="default" :item="item" :index="i"></slot>
