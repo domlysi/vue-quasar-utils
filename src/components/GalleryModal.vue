@@ -77,9 +77,8 @@ import {defineComponent} from 'vue'
 //   default_alt_text?: string
 //   thumb?: object
 // }
+import SrcsetImg from './SrcsetImg.vue';
 
-
-import SrcsetImg from './SrcsetImg';
 let lastDistance = undefined
 
 export default defineComponent({

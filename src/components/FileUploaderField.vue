@@ -185,7 +185,7 @@ export default {
         return false
       }
 
-      if (file.size > props.maxFileSizeInMB * 1024 * 1024) {
+      if (props.maxFileSizeInMB && file.size > props.maxFileSizeInMB * 1024 * 1024) {
         Notify.create({
           position: 'top',
           message: `Maximale Größe von ${props.maxFileSizeInMB} MB überschritten.`,

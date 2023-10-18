@@ -146,6 +146,7 @@ export default defineComponent({
     },
     errors: {
       default: undefined,
+      type: Array || undefined
     },
     modelValue: {
       required: true,
