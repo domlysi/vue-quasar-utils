@@ -37,7 +37,7 @@
           <div style="max-width: 100%; overflow: auto; scroll-behavior: smooth" ref="thumbContainer">
             <div class="flex row no-wrap relative-position" style="height: 100%;">
               <div class="q-ma-xs thumbnails" v-for="(obj, index) in images" :key="obj.file" :class="{'active': index === activeImagePosition}">
-                <component v-bind="getImgComponent(obj)" :is="imgComponent"
+                <component v-bind="getImgComponent(obj, true)" :is="imgComponent"
                   :ref="`gallery-thumb-${index}`"
                   :ratio="3/2"
                   @click="activeImagePosition = index; scale = 1"
@@ -77,9 +77,8 @@ import {defineComponent} from 'vue'
 //   default_alt_text?: string
 //   thumb?: object
 // }
-
-
 import SrcsetImg from './SrcsetImg';
+
 let lastDistance = undefined
 
 export default defineComponent({
@@ -149,16 +148,16 @@ export default defineComponent({
   },
 
   methods: {
-    getImgComponent(image) {
+    getImgComponent(image, thumbnail = false) {
       if (this.withSrcSetImage) {
         return {
           alt: image.default_alt_text,
           image: image,
-          src: image.file
+          src: thumbnail ? image.thumb : image.file
         }
       }
       return {
-        src: image.file
+        src: thumbnail ? image.thumb : image.file
       }
     },
 
