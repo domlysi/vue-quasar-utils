@@ -5,6 +5,7 @@
     position="bottom"
     seamless
     square
+    class="c-cookie-consent"
     @update:model-value="(val) => $emit('update:modelValue', val)"
   >
     <q-card dark>
