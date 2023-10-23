@@ -13,9 +13,9 @@ function parseDate(date, opts, locale = undefined) {
 
   let lang
   if (typeof window !== 'undefined') {
-    lang = locale || $q.localStorage.getItem('language') || (window.navigator ? window.navigator.language : undefined)
+    lang = locale ?? $q.localStorage.getItem('language') ?? (window.navigator ? window.navigator.language : undefined)
   } else {
-    lang = locale || $q.localStorage.getItem('language')
+    lang = locale ?? $q.localStorage.getItem('language')
   }
 
   try {
@@ -30,7 +30,7 @@ export default {
   currency: function ({value, locale = undefined, currency = 'EUR', minimumFractionDigits, maximumFractionDigits}) {
     const $q = useQuasar()
     if (!locale) {
-      locale = $q.localStorage.getItem('language') || 'de'
+      locale = $q.localStorage.getItem('language') ?? 'de'
     }
     return new Intl.NumberFormat(locale, {
       style: 'currency',
@@ -48,7 +48,7 @@ export default {
   ) {
     const $q = useQuasar()
     if (!locale) {
-      locale = $q.localStorage.getItem('language') || 'de'
+      locale = $q.localStorage.getItem('language') ?? 'de'
     }
     return new Intl.NumberFormat(locale, {}).format(value)
   },
@@ -103,9 +103,9 @@ export default {
 
     let lang
     if (typeof window !== 'undefined') {
-      lang = locale || $q.localStorage.getItem('language') || (window.navigator ? window.navigator.language : undefined)
+      lang = locale ?? $q.localStorage.getItem('language') ?? (window.navigator ? window.navigator.language : undefined)
     } else {
-      lang = locale || $q.localStorage.getItem('language')
+      lang = locale ?? $q.localStorage.getItem('language')
     }
 
     return new Intl.DateTimeFormat(lang, options).format(dateObj)
