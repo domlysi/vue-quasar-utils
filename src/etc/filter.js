@@ -27,8 +27,19 @@ function parseDate(date, opts, locale = undefined) {
 }
 
 export default {
-  currency: function ({value, locale = undefined, currency = 'EUR', minimumFractionDigits, maximumFractionDigits}) {
+  currency: function ({
+                        value,
+                        locale = undefined,
+                        currency = 'EUR',
+                        minimumFractionDigits = 0,
+                        maximumFractionDigits = 2
+                      }) {
+    if (value === undefined || value === null || isNaN(value)) {
+      console.log('currency filter: value is undefined, null or NaN')
+      return '-'
+    }
     const $q = useQuasar()
+
     if (!locale) {
       locale = $q.localStorage.getItem('language') ?? 'de'
     }
