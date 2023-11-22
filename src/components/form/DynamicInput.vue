@@ -2,7 +2,7 @@
   <div>
     <component
       :is="component.component"
-      :error="!!errors ? true : undefined"
+      :error="errors?.length ? true : undefined"
       :error-message="errors ? errors.join(' ') : undefined"
       :model-value="component.attrs.modelValue"
       v-bind="component.attrs"
