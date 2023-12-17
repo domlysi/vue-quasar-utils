@@ -9,7 +9,7 @@
       <component
         :is="getFieldComponent(field.type)"
         v-model="formData[field.attrs.name]"
-        :class="fieldClass"
+        :class="field.attrs.class || fieldClass"
         :dark="dark"
         :disable="disabled"
         :errors="errors ? errors[field.attrs.name]: undefined"
@@ -78,6 +78,10 @@ export default {
     showReadonlyFields: {
       type: Boolean,
       default: false
+    },
+    excludeFields: {
+      type: Array,
+      default: []
     }
   },
 
@@ -120,6 +124,8 @@ export default {
       }
       let ret = []
       for (const [fieldKey, fieldValue] of Object.entries(props.optionFields)) {
+        // excluded fields
+        if (props.excludeFields.includes(fieldKey)) continue
         // skip if field is set to null
         if (props.fieldsConfig[fieldKey] === null) continue
 
@@ -128,7 +134,7 @@ export default {
         }
         if (props.modelValue && props.modelValue.hasOwnProperty(fieldKey)) {
           formData.value[fieldKey] = props.modelValue[fieldKey]
-        } else if (fieldValue?.default) {
+        } else if (fieldValue?.default !== undefined) {
           formData.value[fieldKey] = fieldValue.default
         }
 
